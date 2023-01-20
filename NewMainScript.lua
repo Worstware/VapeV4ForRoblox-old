@@ -51,9 +51,9 @@ local function GetURL(scripturl)
 				displayPopup("The connection to github is taking a while, Please be patient.")
 			end
 		end)
-		suc, res = pcall(function() return game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/"..scripturl, true) end)
+		suc, res = pcall(function() return game:HttpGet("https://raw.githubusercontent.com/Worstware/VapeV4ForRoblox-old/main/"..scripturl, true) end)
 		if not suc then
-			displayPopup("Failed to connect to github : vape/"..scripturl.." : "..res)
+			displayPopup("Failed to connect to github : old vape/"..scripturl.." : "..res)
 			error(res)
 		end
 		return res
@@ -138,7 +138,7 @@ local checkpublicreponum = 0
 local checkpublicrepo
 checkpublicrepo = function(id)
 	local suc, req = pcall(function() return requestfunc({
-		Url = "https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/CustomModules/"..id..".lua",
+		Url = "https://raw.githubusercontent.com/Worstware/VapeV4ForRoblox-/main/CustomModules/"..id..".lua",
 		Method = "GET"
 	}) end)
 	if not suc then
@@ -183,7 +183,7 @@ local function getcustomassetfunc(path)
 			textlabel:Remove()
 		end)
 		local req = requestfunc({
-			Url = "https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/"..path:gsub("vape/assets", "assets"),
+			Url = "https://raw.githubusercontent.com/Worstware/VapeV4ForRoblox-old/main/"..path:gsub("vape/assets", "assets"),
 			Method = "GET"
 		})
 		writefile(path, req.Body)
@@ -660,11 +660,11 @@ OnlineProfilesButton.MouseButton1Click:Connect(function()
 	if profilesloaded == false then
 		local onlineprofiles = {}
 		local saveplaceid = tostring(shared.CustomSaveVape or game.PlaceId)
-		for i,v in pairs(grabdata("https://raw.githubusercontent.com/7GrandDadPGN/VapeProfiles/main/Profiles/"..saveplaceid.."/profilelist.txt")) do 
+		for i,v in pairs(grabdata("https://raw.githubusercontent.com/Worstware/VapeProfiles/main/Profiles/"..saveplaceid.."/profilelist.txt")) do 
 			onlineprofiles[i] = v
 		end
 		for i2,v2 in pairs(onlineprofiles) do
-			local profileurl = "https://raw.githubusercontent.com/7GrandDadPGN/VapeProfiles/main/Profiles/"..saveplaceid.."/"..v2.OnlineProfileName
+			local profileurl = "https://raw.githubusercontent.com/Worstware/VapeProfiles/main/Profiles/"..saveplaceid.."/"..v2.OnlineProfileName
 			local profilebox = Instance.new("Frame")
 			profilebox.BackgroundColor3 = Color3.fromRGB(31, 30, 31)
 			profilebox.Parent = OnlineProfilesList
