@@ -2464,7 +2464,25 @@ runcode(function()
 		["HoverText"] = "Remove the CPS cap"
 	})
 end)
-
+	local noclickfunc
+	GuiLibrary["ObjectsThatCanBeSaved"]["CombatWindow"]["Api"].CreateOptionsButton({
+				["Name"] = "AutoClickerUnlock",
+		["Function"] = function(callback)
+			if callback then
+				noclickfunc = bedwars["SwordController"].isClickingTooFast
+				bedwars["SwordController"].isClickingTooFast = function(self) 
+					self.lastSwing = tick()
+					return false 
+				end
+				--debug.setconstant(bedwars["SwordController"].attackEntity, 23, 0.64)
+			else
+				bedwars["SwordController"].isClickingTooFast = noclickfunc
+				--debug.setconstant(bedwars["SwordController"].attackEntity, 23, 0.8)
+			end
+		end,
+		["HoverText"] = "NoClickDelay v2"
+	})
+end)
 runcode(function()
 	local oldclick
 	local reachtping = false
