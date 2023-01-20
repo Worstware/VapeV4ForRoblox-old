@@ -5421,7 +5421,7 @@ runcode(function()
         ["Function"] = function(val) end,
         ["Default"] = 360
     })
-  --[[  killauratargets = Killaura.CreateSlider({
+        killauratargets = Killaura.CreateSlider({
         ["Name"] = "Max targets",
         ["Min"] = 1,
         ["Max"] = 10,
@@ -5658,7 +5658,7 @@ runcode(function()
 	end
 
 	BowAura = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
-        ["Name"] = "ProjectileAura",
+        ["Name"] = "BowAura",
         ["Function"] = function(callback)
 			if callback then 
 				task.spawn(function()
@@ -7004,14 +7004,14 @@ runcode(function()
 	speedval = speed.CreateSlider({
 		["Name"] = "Speed",
 		["Min"] = 1,
-		["Max"] = 23,
+		["Max"] = 80,
 		["Function"] = function(val) end,
 		["Default"] = 23
 	})
 	speedvalbig = speed.CreateSlider({
 		["Name"] = "Big Mode Speed",
 		["Min"] = 1,
-		["Max"] = 23,
+		["Max"] = 80,
 		["Function"] = function(val) end,
 		["Default"] = 23
 	})
@@ -7270,13 +7270,13 @@ runcode(function()
 	})
 	flymode = fly.CreateDropdown({
 		["Name"] = "Mode",
-		["List"] = {"CFrame", "Normal"},
+		["List"] = {"CFrame", "Normal", "Heatseeker"},
 		["Function"] = function() end
 	})
 	flyspeed = fly.CreateSlider({
 		["Name"] = "Speed",
 		["Min"] = 1,
-		["Max"] = 23,
+		["Max"] = 80,
 		["Function"] = function(val) end, 
 		["Default"] = 23
 	})
@@ -10154,8 +10154,8 @@ runcode(function()
 		["Default"] = true
 	})
 	local changecheck = false
---[[	AnticheatBypassCombatCheck = AnticheatBypass.CreateToggle({
-		["Name"] = "Combat Check",
+	AnticheatBypassCombatCheck = AnticheatBypass.CreateToggle({
+--[[		["Name"] = "Combat Check",
 		["Function"] = function(callback) 
 			if callback then 
 				task.spawn(function()
@@ -10467,6 +10467,129 @@ runcode(function()
 		["HoverText"] = "Automatically grabs Juggernaut Crates."
 	})
 end)
+	AnticheatBypass = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "AnticheatBypass2",
+		["Function"] = function(callback)
+			if callback then
+				task.spawn(function()
+					task.spawn(function()
+						repeat task.wait() until shared.VapeFullyLoaded
+						if AnticheatBypass["Enabled"] then
+							if not GuiLibrary["ObjectsThatCanBeSaved"]["FlyBoost SpeedToggle"]["Api"]["Enabled"] then 
+								GuiLibrary["ObjectsThatCanBeSaved"]["FlyBoost SpeedToggle"]["Api"]["ToggleButton"](true)
+							end
+							if AutoReport["Enabled"] == false then
+								AutoReport["ToggleButton"](false)
+							end
+							if AutoReportV2["Enabled"] == false then
+								AutoReportV2["ToggleButton"](false)
+							end
+						end
+					end)
+				--	GuiLibrary["ObjectsThatCanBeSaved"]["SpeedSpeedSlider"]["Api"]["SetValue"](74)
+				--	GuiLibrary["ObjectsThatCanBeSaved"]["SpeedModeDropdown"]["Api"]["SetValue"]("Heatseeker")
+				--	GuiLibrary["ObjectsThatCanBeSaved"]["FlySpeedSlider"]["Api"]["SetValue"](74)
+				--  GuiLibrary["ObjectsThatCanBeSaved"]["FlyModeDropdown"]["Api"]["SetValue"]("Heatseeker")
+				end)
+			--	anticheatbypassenable()
+			else
+				allowspeed = true
+				if anticheatconnection then 
+					anticheatconnection:Disconnect()
+				end
+				if anticheatconnection2 then anticheatconnection2:Disconnect() end
+				pcall(function() RunLoops:UnbindFromHeartbeat("AnticheatBypass") end)
+				if clonesuccess and oldcloneroot and clone and lplr.Character.Parent == workspace and oldcloneroot.Parent ~= nil then 
+					lplr.Character.Parent = game
+					oldcloneroot.Parent = lplr.Character
+					lplr.Character.PrimaryPart = oldcloneroot
+					lplr.Character.Parent = workspace
+					oldcloneroot.CanCollide = true
+					oldcloneroot.Transparency = 1
+					for i,v in pairs(lplr.Character:GetDescendants()) do 
+						if v:IsA("Weld") or v:IsA("Motor6D") then 
+							if v.Part0 == clone then v.Part0 = oldcloneroot end
+							if v.Part1 == clone then v.Part1 = oldcloneroot end
+						end
+						if v:IsA("BodyVelocity") then 
+							v:Destroy()
+						end
+					end
+					for i,v in pairs(oldcloneroot:GetChildren()) do 
+						if v:IsA("BodyVelocity") then 
+							v:Destroy()
+						end
+					end
+					lplr.Character.Humanoid.HipHeight = hip or 2
+				end
+				if clone then 
+					clone:Destroy()
+					clone = nil
+				end
+				oldcloneroot = nil
+			end
+		end,
+		["HoverText"] = "Makes speed check more stupid.\n(thank you to MicrowaveOverflow.cpp#7030 for no more clone crap)",
+	})
+	AnticheatBypassAutoConfig = AnticheatBypass.CreateToggle({
+		["Name"] = "Auto Config",
+		["Function"] = function(callback) 
+			if AnticheatBypassAutoConfigSpeed["Object"] then 
+				AnticheatBypassAutoConfigSpeed["Object"].Visible = callback
+			end
+			if AnticheatBypassAutoConfigSpeed2["Object"] then 
+				AnticheatBypassAutoConfigSpeed2["Object"].Visible = callback
+			end
+			if AnticheatBypassAutoConfigBig["Object"] then 
+				AnticheatBypassAutoConfigBig["Object"].Visible = callback
+			end
+		end,
+		["Default"] = true
+	})
+	AnticheatBypassAutoConfigSpeed = AnticheatBypass.CreateSlider({
+		["Name"] = "Speed",
+		["Function"] = function() end,
+		["Min"] = 1,
+		["Max"] = GuiLibrary["ObjectsThatCanBeSaved"]["SpeedSpeedSlider"]["Api"]["Max"],
+		["Default"] = GuiLibrary["ObjectsThatCanBeSaved"]["SpeedSpeedSlider"]["Api"]["Default"]
+	})
+	AnticheatBypassAutoConfigSpeed["Object"].BorderSizePixel = 0
+	AnticheatBypassAutoConfigSpeed["Object"].BackgroundTransparency = 0
+	AnticheatBypassAutoConfigSpeed["Object"].BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	AnticheatBypassAutoConfigSpeed["Object"].Visible = false
+	AnticheatBypassAutoConfigSpeed2 = AnticheatBypass.CreateSlider({
+		["Name"] = "Big Mode Speed",
+		["Function"] = function() end,
+		["Min"] = 1,
+		["Max"] = GuiLibrary["ObjectsThatCanBeSaved"]["SpeedSpeedSlider"]["Api"]["Max"],
+		["Default"] = GuiLibrary["ObjectsThatCanBeSaved"]["SpeedSpeedSlider"]["Api"]["Default"]
+	})
+	AnticheatBypassAutoConfigSpeed2["Object"].BorderSizePixel = 0
+	AnticheatBypassAutoConfigSpeed2["Object"].BackgroundTransparency = 0
+	AnticheatBypassAutoConfigSpeed2["Object"].BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	AnticheatBypassAutoConfigSpeed2["Object"].Visible = false
+	AnticheatBypassAutoConfigBig = AnticheatBypass.CreateToggle({
+		["Name"] = "Big Mode CFrame",
+		["Function"] = function() end,
+		["Default"] = true
+	})
+	AnticheatBypassAutoConfigBig["Object"].BorderSizePixel = 0
+	AnticheatBypassAutoConfigBig["Object"].BackgroundTransparency = 0
+	AnticheatBypassAutoConfigBig["Object"].BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	AnticheatBypassAutoConfigBig["Object"].Visible = false
+	AnticheatBypassAlternate = AnticheatBypass.CreateToggle({
+		["Name"] = "Alternate Numbers",
+		["Function"] = function() end
+	})
+	AnticheatBypassTransparent = AnticheatBypass.CreateToggle({
+		["Name"] = "Transparent",
+		["Function"] = function(callback) 
+			if oldcloneroot and AnticheatBypass["Enabled"] then
+				oldcloneroot.Transparency = callback and 1 or 0
+			end
+		end,
+		["Default"] = true
+	})
 
 runcode(function()
 	local vapecapeconnection
@@ -10930,7 +11053,7 @@ end)
 runcode(function()
 	local CameraFix = {["Enabled"] = false}
 	CameraFix = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
-		["Name"] = "GameFixer",
+		["Name"] = "CameraFix",
 		["Function"] = function(callback)
 			if callback then
 				task.spawn(function()
@@ -10950,10 +11073,35 @@ runcode(function()
 				debug.setconstant(bedwars["QueueCard"].render, 9, 0.01)
 			end
 		end,
-		["HoverText"] = "Fixes game bugs"
+		["HoverText"] = "fixes 3rd person face bug"
 	})
 end)
-
+runcode(function()
+	local CardFixer = {["Enabled"] = false}
+	CardFixer = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "CardFixer",
+		["Function"] = function(callback)
+			if callback then
+				task.spawn(function()
+					repeat task.wait() until matchState ~= 0
+					if bedwars["ClientStoreHandler"]:getState().Game.customMatch == nil and CameraFix["Enabled"] then 
+						debug.setconstant(bedwars["QueueCard"].render, 9, 0.1)
+					end
+				end)
+				task.spawn(function()
+					repeat
+						task.wait()
+						if (not CameraFix["Enabled"]) then break end
+						UserSettings():GetService("UserGameSettings").RotationType = ((cam.CFrame.Position - cam.Focus.Position).Magnitude <= 0.5 and Enum.RotationType.CameraRelative or Enum.RotationType.MovementRelative)
+					until (not CameraFix["Enabled"])
+				end)
+			else
+				debug.setconstant(bedwars["QueueCard"].render, 9, 0.01)
+			end
+		end,
+		["HoverText"] = "yes"
+	})
+end)
 runcode(function()
 	local transformed = false
 	local OldBedwars = {["Enabled"] = false}
